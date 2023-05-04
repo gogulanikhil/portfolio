@@ -1,5 +1,6 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
+import Form from './Form';
 
 function App() {
   const [profiles, setProfiles] = useState([]);
@@ -18,35 +19,40 @@ function App() {
   if (!profiles || Object.keys(profiles).length === 0) {
     return <div>Loading...</div>;
   }
-  const removeById= async(id)=>{
-      // fetch(`http://localhost:8080/delete/${id}`,{
-      //   method:'DELETE'
-      // }).then(response => response.json())
-      //   .then(data=>{
-      //     console.log(data)
-      //     setProfiles(profiles.filter(eachObj => eachObj.id !== id));
-      //   })
-      //   .catch(error => {
-      //     console.error('There was a problem with the delete operation:',error);
-      //   });
+  const removeById = async (id) => {
+    // fetch(`http://localhost:8080/delete/${id}`,{
+    //   method:'DELETE'
+    // }).then(response => response.json())
+    //   .then(data=>{
+    //     console.log(data)
+    //     setProfiles(profiles.filter(eachObj => eachObj.id !== id));
+    //   })
+    //   .catch(error => {
+    //     console.error('There was a problem with the delete operation:',error);
+    //   });
 
-      const repsone = await fetch(`http://localhost:8080/delete/${id}`, {
-        method : 'DELETE'
-      })
+    const repsone = await fetch(`http://localhost:8080/delete/${id}`, {
+      method: 'DELETE'
+    })
 
-      const data = await repsone.json();
-      console.log(data)
-      setProfiles(profiles.filter(eachData => eachData.id !== id))
+    const data = await repsone.json();
+    console.log(data)
+    setProfiles(profiles.filter(eachData => eachData.id !== id))
 
-    }
+  }
 
-    console.log(profiles)
+  console.log(profiles)
   // const edit=(id)=>{
 
   // }
+  const newUser=()=>{
+    return <div>
+      <h1><Form/></h1>
+    </div>
+  }
   return (
     profiles.map((eachObj) => {
-      const {id,name, serialno, status, age, about, skills ,index} = eachObj
+      const { id, name, serialno, status, age, about, skills, index } = eachObj
       return (<div key={index}>
         <h1>{name}</h1>
         <p>id : {id}</p>
@@ -56,9 +62,10 @@ function App() {
         <p>About: {about}</p>
         <p>Skills: {skills}</p>
         {/* <button onClick={()=>{edit}}>edit</button> */}
-        <button onClick={()=>(removeById(id))}>delete</button>
+        <button onClick={() => (removeById(id))}>delete</button>
+        <button onClick={newUser}>Add User</button>
       </div>
-      );
+      )
     })
   )
 }
