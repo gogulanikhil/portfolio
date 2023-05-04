@@ -4,52 +4,33 @@ import Form from './Form';
 
 function App() {
   const [profiles, setProfiles] = useState([]);
+  const [showForm, setShowForm] = useState(false);
 
-  useEffect(() => {
-    fetch('http://localhost:8080/get')
-      .then(response => response.json())
-      .then(data => {
-        setProfiles(data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, [profiles.length]);
+        useEffect(() => {
+          fetch('http://localhost:8080/get')
+            .then(response => response.json())
+            .then(data => {
+              setProfiles(data);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        }, [profiles.length]);
 
   if (!profiles || Object.keys(profiles).length === 0) {
     return <div>Loading...</div>;
   }
   const removeById = async (id) => {
-    // fetch(`http://localhost:8080/delete/${id}`,{
-    //   method:'DELETE'
-    // }).then(response => response.json())
-    //   .then(data=>{
-    //     console.log(data)
-    //     setProfiles(profiles.filter(eachObj => eachObj.id !== id));
-    //   })
-    //   .catch(error => {
-    //     console.error('There was a problem with the delete operation:',error);
-    //   });
-
     const repsone = await fetch(`http://localhost:8080/delete/${id}`, {
       method: 'DELETE'
     })
 
     const data = await repsone.json();
-    console.log(data)
     setProfiles(profiles.filter(eachData => eachData.id !== id))
-
   }
-
-  console.log(profiles)
-  // const edit=(id)=>{
-
-  // }
-  const newUser=()=>{
-    return <div>
-      <h1><Form/></h1>
-    </div>
-  }
+  const toggleForm = () => {
+    setShowForm(!showForm);
+  };
   return (
     profiles.map((eachObj) => {
       const { id, name, serialno, status, age, about, skills, index } = eachObj
@@ -63,10 +44,12 @@ function App() {
         <p>Skills: {skills}</p>
         {/* <button onClick={()=>{edit}}>edit</button> */}
         <button onClick={() => (removeById(id))}>delete</button>
-        <button onClick={newUser}>Add User</button>
+        {/* <button onClick={()=>(newUser())}>AddUser</button> */}
+        <button onClick={toggleForm}>{showForm ? "Hide Form" : "Add User"}</button>
+        {showForm && <Form />}
       </div>
       )
     })
   )
 }
-export default App;
+export default App
